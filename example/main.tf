@@ -7,7 +7,7 @@ terraform {
   }
   backend "s3" {
     bucket                      = "bucket-name"
-    region                      = "fsn1"
+    region                      = "nbg1"
     key                         = "file-name.tfstate"
     skip_region_validation      = true
     skip_credentials_validation = true
