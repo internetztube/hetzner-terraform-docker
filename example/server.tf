@@ -1,5 +1,5 @@
 module "main" {
-  source       = "github.com/internetztube/terraform-hetzner-docker"
+  source       = "github.com/internetztube/hetzner-terraform-docker"
   name         = "main"
   server_type  = "cx22"
   location     = var.location
@@ -12,8 +12,6 @@ module "main" {
 
   ssh_key_id      = hcloud_ssh_key.default.id
   ssh_private_key = var.ssh_private_key
-
-  hcloud_token = var.hcloud_token
 }
 
 resource "hcloud_firewall" "http" {
