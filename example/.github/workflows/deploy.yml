@@ -1,0 +1,31 @@
+name: Deploy to Hetzner
+
+on:
+  push:
+    branches:
+      - master
+
+concurrency:
+  group: deploy
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Deploy
+        env:
+          TF_VAR_hcloud_token: ${{ secrets.HCLOUD_TOKEN }}
+          TF_VAR_ssh_public_key: "${{ secrets.SSH_PUBLIC_KEY }}"
+          TF_VAR_ssh_private_key: "${{ secrets.SSH_PRIVATE_KEY }}"
+          AWS_ACCESS_KEY_ID: "${{ secrets.HCLOUD_ACCESS_KEY_ID }}"
+          AWS_SECRET_ACCESS_KEY: "${{ secrets.HCLOUD_SECRET_ACCESS_KEY }}"
+        run: |
+          terraform init
+          terraform apply -auto-approve
