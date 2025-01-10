@@ -14,7 +14,7 @@ MOUNT_FOLDER="/mnt/volume"
 BACKUP_KEEP_COUNT="${BACKUP_KEEP_COUNT:=5}"
 BACKUP_CLEANUP="${BACKUP_CLEANUP:="true"}"
 
-BACKUP_FILENAME="backup-$(date +%FT%T).tar.gz"
+BACKUP_FILENAME="backup-$(date +"%Y-%m-%d_%H-%M-%S").tar.gz"
 export AWS_ENDPOINT_URL="https://${AWS_REGION}.your-objectstorage.com"
 
 if ! aws s3 ls "s3://${BUCKET_NAME}" > /dev/null 2>&1; then
