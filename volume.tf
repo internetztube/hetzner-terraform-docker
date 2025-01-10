@@ -30,12 +30,12 @@ resource "null_resource" "volume_attachment" {
   }
 
   provisioner "file" {
-    source      = "${path.module}/scripts/volume-attachment.sh"
+    source      = "${path.module}/scripts/volume-backup.sh"
     destination = "/root/volume-backup.sh"
   }
 
   provisioner "file" {
-    source      = "${path.module}/scripts/volume-attachment.sh"
+    source      = "${path.module}/scripts/volume-restore.sh"
     destination = "/root/volume-restore.sh"
   }
 
