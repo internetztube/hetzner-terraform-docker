@@ -41,9 +41,13 @@ systemctl stop docker-compose
 
 # Move files and folders into ${MOUNT_FOLDER}.
 for item in *; do
-  [[ "${item}" == "." || "${item}" == ".." ]] && continue
+  if [ "${item}" = "." ] || [ "${item}" = ".." ]; then
+    continue
+  fi
   target="${MOUNT_FOLDER}/${item}"
-  [[ -e "${target}" ]] && rm -rf "${target}"
+  if [ -e "${target}" ]; then
+    rm -rf "${target}"
+  fi
   mv "${item}" ../
   echo "Moved '${item}' to parent."
 done
