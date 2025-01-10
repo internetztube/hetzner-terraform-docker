@@ -5,7 +5,7 @@ resource "hcloud_volume_attachment" "default" {
   automount = true
 }
 
-resource "null_resource" "floating_ip_volume" {
+resource "null_resource" "volume_attachment" {
   count = var.volume != null ? 1 : 0
 
   depends_on = [
