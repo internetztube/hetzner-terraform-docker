@@ -10,15 +10,15 @@ DEVICE="/dev/disk/by-id/scsi-0HC_Volume_${VOLUME_ID}"
 MOUNT_POINT="/mnt/volume"
 
 # Wait for the device to be available
-while [ ! -b "${DEVICE}" ]; do
+if [ ! -b "${DEVICE}" ]; then
   sleep 5
-done
+fi
 
 # Wait for the device to be available
-while [ ! -b "${DEVICE}" ]; do
+if [ ! -b "${DEVICE}" ]; then
   echo "Disk is not available!"
   exit 1
-done
+fi
 
 # Format the volume if not already formatted
 if ! blkid "${DEVICE}"; then
