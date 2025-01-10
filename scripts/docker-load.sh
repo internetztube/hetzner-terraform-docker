@@ -2,7 +2,7 @@
 
 set -e -u
 
-# Runtime Environment: remote
+# Runtime Environment: remote via terraform/ssh
 
 for tar_file in /root/container-artifacts/*.tar; do
   if [ -f "${tar_file}" ]; then

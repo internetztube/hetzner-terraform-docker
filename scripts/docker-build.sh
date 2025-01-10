@@ -2,7 +2,7 @@
 
 set -e -u
 
-# Runtime Environment: local
+# Runtime Environment: local via terraform
 
 # CONTAINERS_FOLDER_PATH=
 # CONTAINERS_ARTIFACTS_FOLDER_PATH=

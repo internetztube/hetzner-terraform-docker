@@ -2,7 +2,7 @@
 
 set -e -u
 
-# Runtime Environment: local
+# Runtime Environment: local via terraform
 
 # CREATE_FINAL_SNAPSHOT=
 # SERVER_NAME=

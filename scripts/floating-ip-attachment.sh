@@ -2,7 +2,7 @@
 
 set -e -u
 
-# Runtime Environment: remote
+# Runtime Environment: remote via terraform/ssh
 
 # IP_ADDRESS=
 # IP_CIDR=
