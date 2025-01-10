@@ -2,7 +2,7 @@
 
 set -e -u
 
-# Runtime Environment: remote manually
+# Runtime Environment: remote via github actions/ssh
 
 # AWS_REGION=
 # AWS_ACCESS_KEY_ID=
@@ -23,7 +23,7 @@ fi
 echo ""
 echo "Creating new backup:"
 export BACKUP_CLEANUP="false"
-sh backup.sh
+sh /root/volume-backup.sh
 
 # Downloading selected Backup and unpack.
 echo ""

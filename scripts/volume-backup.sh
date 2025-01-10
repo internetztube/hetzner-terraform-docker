@@ -2,7 +2,7 @@
 
 set -e -u
 
-# Runtime Environment: remote via manual/ssh
+# Runtime Environment: remote via github actions/ssh
 
 # AWS_REGION=
 # AWS_ACCESS_KEY_ID=
