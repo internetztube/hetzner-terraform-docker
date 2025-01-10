@@ -26,7 +26,7 @@ else
 fi
 
 cd "${MOUNT_FOLDER}" || exit 1
-tar --exclude=z -czvf "${BACKUP_FILENAME}" .
+tar --exclude=z -czvf "${BACKUP_FILENAME}" $(ls -A)
 
 aws s3 cp "${MOUNT_FOLDER}/${BACKUP_FILENAME}" "s3://${BUCKET_NAME}/${BACKUP_FILENAME}"
 rm -rf "${MOUNT_FOLDER}/${BACKUP_FILENAME}"
