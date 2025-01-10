@@ -15,7 +15,7 @@ export AWS_ENDPOINT_URL="https://${AWS_REGION}.your-objectstorage.com"
 
 # Check if file exists
 if ! aws s3 ls "s3://${BUCKET_NAME}/${BACKUP_FILE_NAME}" > /dev/null 2>&1; then
-  echo "File ${FILE_KEY} does not exist in bucket ${BUCKET_NAME}!"
+  echo "File \"s3://${BUCKET_NAME}/${BACKUP_FILE_NAME}\" does not exist in bucket ${BUCKET_NAME}!"
   exit 1
 fi
 
