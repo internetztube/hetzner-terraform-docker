@@ -2,14 +2,12 @@
 
 set -e -u
 
-# TERRAFORM_MODULE_PATH=
 # TF_VAR_location=
 # TF_VAR_ssh_private_key=
 # AWS_ACCESS_KEY_ID=
 # AWS_SECRET_ACCESS_KEY=
 # BUCKET_NAME=
-
-terraform init
+# TERRAFORM_MODULE_PATH=
 
 SERVER_IP=$(terraform console <<< "${TERRAFORM_MODULE_PATH}.server_ipv4" | tr -d '"')
 TF_VAR_ssh_private_key="${TF_VAR_ssh_private_key}"
