@@ -8,6 +8,7 @@ set -e -u
 # BACKUP_BUCKET_NAME=
 # BACKUP_SSH_PRIVATE_KEY=
 # BACKUP_TERRAFORM_MODULE_PATH=
+# BACKUP_KEEP_COUNT=5
 
 SERVER_IP=$(
   terraform show -json \
@@ -42,5 +43,6 @@ ssh -i id_rsa root@"${SERVER_IP}" bash -s <<EOF
   export AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}"
   export BUCKET_NAME="${BACKUP_BUCKET_NAME}"
   export BACKUP_FILENAME_PREFIX="${BACKUP_TERRAFORM_MODULE_PATH}"
+  export BACKUP_KEEP_COUNT="${BACKUP_KEEP_COUNT:=5}"
   sh /root/volume-backup.sh
 EOF

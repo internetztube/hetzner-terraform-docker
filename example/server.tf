@@ -1,6 +1,6 @@
-module "main" {
+module "worker1" {
   source                   = "github.com/internetztube/hetzner-terraform-docker"
-  name                     = "main"
+  name                     = "worker1"
   server_type              = "cx22"
   location                 = var.location
   floating_ip              = hcloud_floating_ip.main
