@@ -2,7 +2,7 @@ resource "hcloud_volume_attachment" "default" {
   count     = var.volume != null ? 1 : 0
   server_id = hcloud_server.default.id
   volume_id = var.volume.id
-  automount = true
+  automount = false
 }
 
 resource "null_resource" "volume_attachment" {
