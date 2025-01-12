@@ -2,19 +2,19 @@
 
 set -e -u
 
-# TF_VAR_location=
-# TF_VAR_ssh_private_key=
 # AWS_ACCESS_KEY_ID=
 # AWS_SECRET_ACCESS_KEY=
-# BUCKET_NAME=
-# TERRAFORM_MODULE_PATH=
+# BACKUP_BUCKET_LOCATION=
+# BACKUP_BUCKET_NAME=
+# BACKUP_SSH_PRIVATE_KEY=
+# BACKUP_TERRAFORM_MODULE_PATH=
 
-SERVER_IP=$(terraform console <<< "${TERRAFORM_MODULE_PATH}.server_ipv4" | tr -d '"')
-TF_VAR_ssh_private_key="${TF_VAR_ssh_private_key}"
-TF_VAR_location="${TF_VAR_location}"
+SERVER_IP=$(terraform console <<< "${BACKUP_TERRAFORM_MODULE_PATH}.server_ipv4" | tr -d '"')
+BACKUP_SSH_PRIVATE_KEY="${BACKUP_SSH_PRIVATE_KEY}"
+BACKUP_BUCKET_LOCATION="${BACKUP_BUCKET_LOCATION}"
 
 echo "Connecting to ${SERVER_IP} ..."
-echo "${TF_VAR_ssh_private_key}" > id_rsa
+echo "${BACKUP_SSH_PRIVATE_KEY}" > id_rsa
 chmod 600 id_rsa
 
 # Create .ssh directory
@@ -28,10 +28,10 @@ chmod 700 ~/.ssh
 chmod 600 ~/.ssh/known_hosts
 
 ssh -i id_rsa root@"${SERVER_IP}" bash -s <<EOF
-  export AWS_REGION="${TF_VAR_location}"
+  export AWS_REGION="${BACKUP_BUCKET_LOCATION}"
   export AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}"
   export AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}"
-  export BUCKET_NAME="${BUCKET_NAME}"
-  export BACKUP_FILENAME_PREFIX="${TERRAFORM_MODULE_PATH}"
+  export BUCKET_NAME="${BACKUP_BUCKET_NAME}"
+  export BACKUP_FILENAME_PREFIX="${BACKUP_TERRAFORM_MODULE_PATH}"
   sh /root/volume-backup.sh
 EOF
