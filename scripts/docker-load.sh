@@ -11,7 +11,7 @@ for tar_file in /root/container-artifacts/*.tar; do
   fi
 done
 
-services="$(yq eval '.services | keys[]' /root/docker-compose.yml)"
+services="$(yq -r '.services | keys[]' /root/docker-compose.yml)"
 for service_name in $services; do
   mkdir -p "/mnt/volume/${service_name}"
 done
