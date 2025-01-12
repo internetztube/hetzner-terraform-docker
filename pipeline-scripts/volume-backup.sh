@@ -9,7 +9,16 @@ set -e -u
 # BACKUP_SSH_PRIVATE_KEY=
 # BACKUP_TERRAFORM_MODULE_PATH=
 
-SERVER_IP=$(echo "${BACKUP_TERRAFORM_MODULE_PATH}.server_ipv4" | terraform console | tr -d '"')
+SERVER_IP=$(
+  terraform show -json \
+    | jq -r "
+      .values.root_module.child_modules[]
+      | select(.address==\"${BACKUP_TERRAFORM_MODULE_PATH}\")
+      | .resources[]
+      | select(.address==\"${BACKUP_TERRAFORM_MODULE_PATH}.hcloud_server.default\")
+      | .values.ipv4_address
+    "
+)
 BACKUP_SSH_PRIVATE_KEY="${BACKUP_SSH_PRIVATE_KEY}"
 BACKUP_BUCKET_LOCATION="${BACKUP_BUCKET_LOCATION}"
 
