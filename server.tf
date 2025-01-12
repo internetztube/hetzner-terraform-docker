@@ -5,6 +5,7 @@ resource "hcloud_server" "default" {
   location     = var.location
   user_data    = file("${path.module}/cloud-init.yml")
   firewall_ids = concat(var.firewall_ids, [hcloud_firewall.ssh.id])
+  keep_disk = true
 
   # ipv4 needs to be enabled in order to make ipv4 floating ip work.
   public_net {
