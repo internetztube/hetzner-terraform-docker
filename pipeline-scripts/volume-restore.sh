@@ -3,18 +3,19 @@
 set -e -u
 
 # TERRAFORM_MODULE_PATH=
+# TF_VAR_location=
 # TF_VAR_ssh_private_key=
-# AWS_REGION=
 # AWS_ACCESS_KEY_ID=
 # AWS_SECRET_ACCESS_KEY=
+
 # BACKUP_FILE_NAME=
 # BUCKET_NAME=
 
 terraform init
 
-TERRAFORM_MODULE_PATH_SERVER_IPV4="${TERRAFORM_MODULE_PATH}.server_ipv4"
-SERVER_IP=$(terraform console <<< "${TERRAFORM_MODULE_PATH_SERVER_IPV4}" | tr -d '"')
+SERVER_IP=$(terraform console <<< "${TERRAFORM_MODULE_PATH}.server_ipv4" | tr -d '"')
 TF_VAR_ssh_private_key="${TF_VAR_ssh_private_key}"
+TF_VAR_location="${TF_VAR_location}"
 
 echo "Connecting to ${SERVER_IP} ..."
 echo "${TF_VAR_ssh_private_key}" > id_rsa
@@ -31,7 +32,7 @@ chmod 700 ~/.ssh
 chmod 600 ~/.ssh/known_hosts
 
 ssh -i id_rsa root@"${SERVER_IP}" bash -s <<EOF
-  export AWS_REGION="${AWS_REGION}"
+  export AWS_REGION="${TF_VAR_location}"
   export AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}"
   export AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}"
   export BUCKET_NAME="${BUCKET_NAME}"
