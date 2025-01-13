@@ -15,10 +15,9 @@ resource "null_resource" "docker-build" {
 
 resource "local_file" "env_file" {
   filename = "${path.module}/.env"
-
   content = join("\n", [
     for env in var.env_variables : "${env.name}=${env.value}"
-  ]) + "\n"  # Adds a newline at the end of the file
+  ])
 }
 
 resource "null_resource" "docker-upload" {
