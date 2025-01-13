@@ -22,6 +22,7 @@ fi
 
 # Check if the device is already mounted
 if mountpoint -q "${MOUNT_POINT}"; then
+  resize2fs -p "${DEVICE}"
   echo "Volume is already mounted at ${MOUNT_POINT}."
   exit 0
 fi
