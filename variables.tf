@@ -54,6 +54,11 @@ variable "create_final_snapshot" {
   description = "Requires \"HCLOUD_TOKEN\" or \"TF_VAR_hcloud_token\" environment variable in pipeline."
 }
 
+variable "env_variables" {
+  type    = list(object({ name = string, value = string }))
+  default = []
+}
+
 locals {
   container_artifacts_folder_path = "${var.containers_folder}/../container-artifacts"
 }

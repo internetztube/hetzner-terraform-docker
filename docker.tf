@@ -13,6 +13,14 @@ resource "null_resource" "docker-build" {
   }
 }
 
+resource "local_file" "env_file" {
+  filename = "${path.module}/.env"
+
+  content = join("\n", [
+    for env in var.env_variables : "${env.name}=${env.value}"
+  ]) + "\n"  # Adds a newline at the end of the file
+}
+
 resource "null_resource" "docker-upload" {
   triggers = {
     always_run = "${timestamp()}"
@@ -40,6 +48,11 @@ resource "null_resource" "docker-upload" {
   provisioner "file" {
     source      = "${path.module}/scripts/docker-load.sh"
     destination = "/root/docker-load.sh"
+  }
+
+  provisioner "file" {
+    source      = "${path.module}/.env"
+    destination = "/root/.env"
   }
 
   provisioner "remote-exec" {
