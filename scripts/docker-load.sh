@@ -17,3 +17,4 @@ for service in ${services}; do
 done
 
 systemctl restart docker-compose
+docker image prune -f
