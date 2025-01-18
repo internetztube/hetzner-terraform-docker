@@ -10,7 +10,7 @@ set -eu
 # BUCKET_NAME=
 # BACKUP_FILE_NAME=
 
-MOUNT_FOLDER="/app/volume"
+MOUNT_FOLDER="/root/volume"
 export AWS_ENDPOINT_URL="https://${AWS_REGION}.your-objectstorage.com"
 
 # Check if file exists

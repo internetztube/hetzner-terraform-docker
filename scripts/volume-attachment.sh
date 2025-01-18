@@ -7,7 +7,7 @@ set -eu
 # VOLUME_ID=
 
 DEVICE="/dev/disk/by-id/scsi-0HC_Volume_${VOLUME_ID}"
-MOUNT_POINT="/app/volume"
+MOUNT_POINT="/root/volume"
 
 # Wait for the device to be available
 if [ ! -b "${DEVICE}" ]; then

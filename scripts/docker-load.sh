@@ -13,7 +13,7 @@ done
 
 services=$(yq -r '.services | keys[]' /root/docker-compose.yml)
 for service in ${services}; do
-  mkdir -p "/app/volume/${service}"
+  mkdir -p "/root/volume/${service}"
 done
 
 systemctl restart docker-compose
