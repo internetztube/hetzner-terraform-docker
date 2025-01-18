@@ -1,17 +1,3 @@
-#cloud-config
-package_update: true
-package_upgrade: true
-
-packages:
-  - apt-transport-https
-  - ca-certificates
-  - curl
-  - gnupg
-  - lsb-release
-  - unattended-upgrades
-  - unzip
-  - yq
-
 runcmd:
   # AWS CLI
   - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
@@ -29,6 +15,6 @@ runcmd:
   - apt-get update
 
   # Install Docker Engine, CLI, Containerd, Docker Compose
-  - apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+  - apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 final_message: "Server is ready!"
