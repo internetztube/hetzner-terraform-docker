@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -euo pipefail
+set -eu
 
 # Runtime Environment: remote via github actions/ssh
 

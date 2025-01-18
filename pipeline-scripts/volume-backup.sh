@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -euo pipefail
+set -eu
 
 # AWS_ACCESS_KEY_ID=
 # AWS_SECRET_ACCESS_KEY=
