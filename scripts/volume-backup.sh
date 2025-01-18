@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e -u
+set -euo pipefail
 
 # Runtime Environment: remote via github actions/ssh
 
@@ -12,7 +12,7 @@ set -e -u
 # BACKUP_FILENAME_PREFIX=backup
 # BACKUP_KEEP_COUNT=5
 
-MOUNT_FOLDER="/mnt/volume"
+MOUNT_FOLDER="/app/volume"
 BACKUP_KEEP_COUNT="${BACKUP_KEEP_COUNT:=5}"
 BACKUP_CLEANUP="${BACKUP_CLEANUP:="true"}"
 
@@ -33,13 +33,13 @@ tar --exclude=z -czvf "${BACKUP_FILENAME}" $(ls -A)
 aws s3 cp "${MOUNT_FOLDER}/${BACKUP_FILENAME}" "s3://${BUCKET_NAME}/${BACKUP_FILENAME}"
 rm -rf "${MOUNT_FOLDER}/${BACKUP_FILENAME}"
 
-if [ "$BACKUP_CLEANUP" = "true" ]; then
+if [ "${BACKUP_CLEANUP}" = "true" ]; then
   aws s3 ls "s3://${BUCKET_NAME}" | \
   sort -r | \
   tail -n +"$((BACKUP_KEEP_COUNT + 1))" | \
   awk '{print $4}' | \
   while read -r key; do
-    aws s3 rm "s3://${BUCKET_NAME}/$key"
+    aws s3 rm "s3://${BUCKET_NAME}/${key}"
   done
   echo "Cleanup completed: Old files deleted."
 else

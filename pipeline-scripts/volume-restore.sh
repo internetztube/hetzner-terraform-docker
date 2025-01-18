@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e -u
+set -euo pipefail
 
 # AWS_ACCESS_KEY_ID=
 # AWS_SECRET_ACCESS_KEY=
@@ -37,7 +37,7 @@ ssh-keyscan -H "${SERVER_IP}" >> ~/.ssh/known_hosts
 chmod 700 ~/.ssh
 chmod 600 ~/.ssh/known_hosts
 
-ssh -i id_rsa root@"${SERVER_IP}" bash -s <<EOF
+ssh -i id_rsa "root@${SERVER_IP}" bash -s <<EOF
   export AWS_REGION="${BACKUP_BUCKET_LOCATION}"
   export AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}"
   export AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}"

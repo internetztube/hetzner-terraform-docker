@@ -1,5 +1,15 @@
 # Hetzner Terraform Docker
 
+## Features
+* Volume Backup & Restore
+* Server Final Snapshot
+* Floating IP
+* Volumes
+* Environment Variables
+* Custom `docker build` commands.
+* Local Docker Registry
+* Custom Docker Build Commands
+
 ## Example
 [Full Example](./example)
 

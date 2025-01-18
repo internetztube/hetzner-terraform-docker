@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e -u
+set -euo pipefail
 
 # Runtime Environment: local via terraform
 
@@ -10,12 +10,12 @@ set -e -u
 # SERVER_ID=
 
 if [ "${CREATE_FINAL_SNAPSHOT}" = "true" ]; then
-   HCLOUD_TOKEN="${HCLOUD_TOKEN:=${TF_VAR_hcloud_token:=""}}"
+  HCLOUD_TOKEN="${HCLOUD_TOKEN:-${TF_VAR_hcloud_token:-""}}"
 
-   if [ -z "${HCLOUD_TOKEN}" ]; then
-     echo "Error: Neither HCLOUD_TOKEN nor TF_VAR_hcloud_token is set."
-     exit 1
- fi
+  if [ -z "${HCLOUD_TOKEN}" ]; then
+    echo "Error: Neither HCLOUD_TOKEN nor TF_VAR_hcloud_token is set."
+    exit 1
+  fi
 
   echo "Creating Final Snapshot ..."
   RESPONSE="$(
@@ -28,10 +28,10 @@ if [ "${CREATE_FINAL_SNAPSHOT}" = "true" ]; then
   echo "${RESPONSE}"
 
   # Extract the action.status using jq
-  STATUS=$(echo "${RESPONSE}" | jq -r '.action.status')
+  STATUS="$(echo "${RESPONSE}" | jq -r '.action.status')"
 
   # Check if the status is "running"
-  if [ "$STATUS" != "running" ]; then
+  if [ "${STATUS}" != "running" ]; then
     echo "Creating Final Snapshot failed!"
     echo "Action status is \"${STATUS}\". Aborting."
     exit 1

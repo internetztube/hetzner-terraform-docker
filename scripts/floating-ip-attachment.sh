@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e -u
+set -euo pipefail
 
 # Runtime Environment: remote via terraform/ssh
 

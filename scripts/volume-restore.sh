@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e -u
+set -euo pipefail
 
 # Runtime Environment: remote via github actions/ssh
 
@@ -10,12 +10,12 @@ set -e -u
 # BUCKET_NAME=
 # BACKUP_FILE_NAME=
 
-MOUNT_FOLDER="/mnt/volume"
+MOUNT_FOLDER="/app/volume"
 export AWS_ENDPOINT_URL="https://${AWS_REGION}.your-objectstorage.com"
 
 # Check if file exists
 if ! aws s3 ls "s3://${BUCKET_NAME}/${BACKUP_FILE_NAME}" > /dev/null 2>&1; then
-  echo "File \"s3://${BUCKET_NAME}/${BACKUP_FILE_NAME}\" does not exist in bucket ${BUCKET_NAME}!"
+  echo "File \"s3://${BUCKET_NAME}/${BACKUP_FILE_NAME}\" does not exist in bucket \"${BUCKET_NAME}\"!"
   exit 1
 fi
 
@@ -48,11 +48,10 @@ for item in *; do
   if [ -e "${target}" ]; then
     rm -rf "${target}"
   fi
-  mv "${item}" ../
-  echo "Moved '${item}' to parent."
+  mv "${item}" "../"
+  echo "Moved \"${item}\" to parent."
 done
 rm -rf "${backup_folder_restore}"
 
 # Start Docker files.
 systemctl start docker-compose
-

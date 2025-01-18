@@ -1,13 +1,13 @@
 #!/bin/bash
 
-set -e -u
+set -euo pipefail
 
 # Runtime Environment: remote via terraform/ssh
 
 # VOLUME_ID=
 
 DEVICE="/dev/disk/by-id/scsi-0HC_Volume_${VOLUME_ID}"
-MOUNT_POINT="/mnt/volume"
+MOUNT_POINT="/app/volume"
 
 # Wait for the device to be available
 if [ ! -b "${DEVICE}" ]; then

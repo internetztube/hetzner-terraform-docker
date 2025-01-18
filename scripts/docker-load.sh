@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e -u
+set -euo pipefail
 
 # Runtime Environment: remote via terraform/ssh
 
@@ -11,9 +11,9 @@ for tar_file in /root/container-artifacts/*.tar; do
   fi
 done
 
-services="$(yq -r '.services | keys[]' /root/docker-compose.yml)"
-for service_name in $services; do
-  mkdir -p "/mnt/volume/${service_name}"
+services=$(yq -r '.services | keys[]' /root/docker-compose.yml)
+for service in ${services}; do
+  mkdir -p "/app/volume/${service}"
 done
 
 systemctl restart docker-compose

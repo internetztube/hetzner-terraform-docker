@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e -u
+set -euo pipefail
 
 # Runtime Environment: local via terraform
 
@@ -10,6 +10,7 @@ set -e -u
 cd "${CONTAINERS_FOLDER_PATH}" || exit 1
 
 mkdir -p "${CONTAINERS_ARTIFACTS_FOLDER_PATH}"
+
 for dir in *; do
   CONTAINER_NAME="$(basename "${dir}")"
   export CONTAINER_NAME
@@ -28,6 +29,6 @@ for dir in *; do
     docker build -t "${CONTAINER_TAG}" -f Dockerfile .
   fi
 
-  cd "${CONTAINERS_FOLDER_PATH}/$CONTAINER_NAME" || exit 1
+  cd "${CONTAINERS_FOLDER_PATH}/${CONTAINER_NAME}" || exit 1
   docker save -o "${CONTAINERS_ARTIFACTS_FOLDER_PATH}/${CONTAINER_NAME}.tar" "${CONTAINER_TAG}"
 done
