@@ -1,9 +1,18 @@
 #cloud-config
-runcmd:
-  # Update apt and install required packages
-  - apt-get update
-  - apt-get install -y ca-certificates curl gnupg ufw unzip yq
+package_update: true
+package_upgrade: true
 
+packages:
+  - apt-transport-https
+  - ca-certificates
+  - curl
+  - gnupg
+  - lsb-release
+  - unattended-upgrades
+  - unzip
+  - yq
+
+runcmd:
   # AWS CLI
   - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
   - unzip awscliv2.zip
@@ -12,43 +21,14 @@ runcmd:
 
   # Add Docker's official GPG key
   - install -m 0755 -d /etc/apt/keyrings
-  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-  - chmod a+r /etc/apt/keyrings/docker.gpg
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+  - chmod a+r /etc/apt/keyrings/docker.asc
 
   # Set up Docker repository
-  - echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+  - echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
   - apt-get update
 
   # Install Docker Engine, CLI, Containerd, Docker Compose
-  - apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-
-  # Docker Compose
-  - |
-    cat << 'EOF' > /etc/systemd/system/docker-compose.service
-    [Unit]
-    Description=Docker Compose Application Service
-    Requires=docker.service
-    After=docker.service
-  
-    [Service]
-    Type=oneshot
-    RemainAfterExit=yes
-    WorkingDirectory=/root
-    EnvironmentFile=/root/.env
-    ExecStart=/usr/bin/docker compose up -d
-    ExecStop=/usr/bin/docker compose down
-    
-    [Install]
-    WantedBy=multi-user.target
-    EOF
-  - chmod 644 /etc/systemd/system/docker-compose.service
-  - systemctl daemon-reload
-  - systemctl enable docker-compose
-
-  # Security Updates
-  # The Hetzner default Ubuntu Images already have `unattended-upgrades` enabled.
-  # https://linuxblog.io/how-to-enable-unattended-upgrades-on-ubuntu-debian/
-
-  # Firewall is managed via Hetzner!
+  - apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 final_message: "Server is ready!"

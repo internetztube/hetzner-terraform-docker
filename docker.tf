@@ -54,6 +54,11 @@ resource "null_resource" "docker-upload" {
     destination = "/root/.env"
   }
 
+  provisioner "file" {
+    source      = "${path.module}/docker-compose.service"
+    destination = "/etc/systemd/system/docker-compose.service"
+  }
+
   provisioner "remote-exec" {
     inline = [
       "mkdir -p /root/container-artifacts"
@@ -64,6 +69,15 @@ resource "null_resource" "docker-upload" {
   provisioner "file" {
     source      = "${local.container_artifacts_folder_path}/"
     destination = "/root/container-artifacts"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "chmod 644 /etc/systemd/system/docker-compose.service",
+      "systemctl daemon-reload",
+      "systemctl enable docker-compose",
+      "mkdir -p /root/container-artifacts"
+    ]
   }
 
   # Load Docker Containers
