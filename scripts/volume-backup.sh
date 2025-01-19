@@ -15,6 +15,7 @@ set -eu
 MOUNT_FOLDER="/root/volume"
 BACKUP_KEEP_COUNT="${BACKUP_KEEP_COUNT:=5}"
 BACKUP_CLEANUP="${BACKUP_CLEANUP:="true"}"
+RCLONE_CONFIG_FILE_PATH="/root/rclone-config"
 
 BACKUP_FILENAME="${BACKUP_FILENAME_PREFIX:="backup"}-$(date +"%Y-%m-%d_%H-%M-%S").tar.gz"
 export AWS_ENDPOINT_URL="https://${AWS_REGION}.your-objectstorage.com"
@@ -30,8 +31,21 @@ fi
 cd "${MOUNT_FOLDER}" || exit 1
 tar --exclude=z -czvf "${BACKUP_FILENAME}" $(ls -A)
 
-aws s3 cp "${MOUNT_FOLDER}/${BACKUP_FILENAME}" "s3://${BUCKET_NAME}/${BACKUP_FILENAME}"
-rm -rf "${MOUNT_FOLDER}/${BACKUP_FILENAME}"
+# Got the following error when using `aws s3 cp`. Therefore, using rclone here.
+# fatal error: argument of type 'NoneType' is not iterable
+rclone selfupdate
+
+echo "[s3]
+type = s3
+provider = Other
+access_key_id = ${AWS_ACCESS_KEY_ID}
+secret_access_key = ${AWS_SECRET_ACCESS_KEY}
+endpoint = ${AWS_ENDPOINT_URL}
+region = ${AWS_REGION}" >> "${RCLONE_CONFIG_FILE_PATH}"
+
+rclone --config /root/rclone-config copy "${MOUNT_FOLDER}/${BACKUP_FILENAME}" s3:${BUCKET_NAME}
+rm -f "${RCLONE_CONFIG_FILE_PATH}"
+rm -f "${MOUNT_FOLDER}/${BACKUP_FILENAME}"
 
 if [ "${BACKUP_CLEANUP}" = "true" ]; then
   aws s3 ls "s3://${BUCKET_NAME}" | \
