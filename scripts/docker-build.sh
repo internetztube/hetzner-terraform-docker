@@ -11,7 +11,7 @@ cd "${CONTAINERS_FOLDER_PATH}" || exit 1
 
 mkdir -p "${CONTAINERS_ARTIFACTS_FOLDER_PATH}"
 
-for dir in *; do
+for dir in */; do
   CONTAINER_NAME="$(basename "${dir}")"
   export CONTAINER_NAME
   CONTAINER_TAG="${CONTAINER_NAME}:latest"
