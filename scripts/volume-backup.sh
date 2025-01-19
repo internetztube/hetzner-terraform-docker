@@ -43,7 +43,7 @@ secret_access_key = ${AWS_SECRET_ACCESS_KEY}
 endpoint = ${AWS_ENDPOINT_URL}
 region = ${AWS_REGION}" >> "${RCLONE_CONFIG_FILE_PATH}"
 
-rclone --config /root/rclone-config copy "${MOUNT_FOLDER}/${BACKUP_FILENAME}" s3:${BUCKET_NAME}
+rclone -vv --config /root/rclone-config copy "${MOUNT_FOLDER}/${BACKUP_FILENAME}" s3:${BUCKET_NAME}
 rm -f "${RCLONE_CONFIG_FILE_PATH}"
 rm -f "${MOUNT_FOLDER}/${BACKUP_FILENAME}"
 
