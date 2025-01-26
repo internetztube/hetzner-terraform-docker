@@ -7,15 +7,16 @@ set -eu
 # AWS_REGION=
 # AWS_ACCESS_KEY_ID=
 # AWS_SECRET_ACCESS_KEY=
-# BUCKET_NAME=
+# AWS_ENDPOINT_URL=
+# BACKUP_S3_BUCKET_NAME=
 # BACKUP_FILE_NAME=
+# BACKUP_PREFIX=backup
 
 MOUNT_FOLDER="/root/volume"
-export AWS_ENDPOINT_URL="https://${AWS_REGION}.your-objectstorage.com"
 
 # Check if file exists
-if ! aws s3 ls "s3://${BUCKET_NAME}/${BACKUP_FILE_NAME}" > /dev/null 2>&1; then
-  echo "File \"s3://${BUCKET_NAME}/${BACKUP_FILE_NAME}\" does not exist in bucket \"${BUCKET_NAME}\"!"
+if ! aws s3 ls "s3://${BACKUP_S3_BUCKET_NAME}/${BACKUP_FILE_NAME}" > /dev/null 2>&1; then
+  echo "File \"s3://${BACKUP_S3_BUCKET_NAME}/${BACKUP_FILE_NAME}\" does not exist in bucket \"${BACKUP_S3_BUCKET_NAME}\"!"
   exit 1
 fi
 

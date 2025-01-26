@@ -40,12 +40,12 @@ jobs:
 
           AWS_ACCESS_KEY_ID: "${{ secrets.HCLOUD_ACCESS_KEY_ID }}"
           AWS_SECRET_ACCESS_KEY: "${{ secrets.HCLOUD_SECRET_ACCESS_KEY }}"
+          AWS_REGION: "nbg1"
 
-          BACKUP_BUCKET_LOCATION: "nbg1"
-          BACKUP_BUCKET_NAME: "backup-volume-radio-fingerprinting"
-          BACKUP_SSH_PRIVATE_KEY: "${{ secrets.SSH_PRIVATE_KEY }}"
+          BACKUP_S3_BUCKET_NAME: "backup-volume-radio-fingerprinting"
           BACKUP_FILE_NAME: "${{ github.event.inputs.backup_file_name }}"
           BACKUP_TERRAFORM_MODULE_NAME: "${{ github.event.inputs.terraform_module_name }}"
+          BACKUP_SSH_PRIVATE_KEY: "${{ secrets.SSH_PRIVATE_KEY }}"
 
         run: |
           terraform init

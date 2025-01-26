@@ -23,10 +23,10 @@ jobs:
 
       AWS_ACCESS_KEY_ID: "${{ secrets.HCLOUD_ACCESS_KEY_ID }}"
       AWS_SECRET_ACCESS_KEY: "${{ secrets.HCLOUD_SECRET_ACCESS_KEY }}"
+      AWS_REGION: "nbg1"
 
+      BACKUP_S3_BUCKET_NAME: "backup-volume-radio-fingerprinting"
       BACKUP_KEEP_COUNT: "5"
-      BACKUP_BUCKET_LOCATION: "nbg1"
-      BACKUP_BUCKET_NAME: "backup-volume-radio-fingerprinting"
       BACKUP_SSH_PRIVATE_KEY: "${{ secrets.SSH_PRIVATE_KEY }}"
 
     steps:
