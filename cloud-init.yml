@@ -1,18 +1,5 @@
 #cloud-config
 runcmd:
-  # Update apt and install required packages
-  - apt-get update
-  - apt-get install -y ca-certificates unattended-upgrades curl gnupg ufw unzip yq
-
-  # AWS CLI
-  - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-  - unzip awscliv2.zip
-  - ./aws/install
-  - rm -f awscliv2.zip
-
-  # rclone
-  - curl https://rclone.org/install.sh | sudo bash
-
   # Add Docker's official GPG key
   - install -m 0755 -d /etc/apt/keyrings
   - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
@@ -20,10 +7,32 @@ runcmd:
 
   # Set up Docker repository
   - echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
-  - apt-get update
 
   # Install Docker Engine, CLI, Containerd, Docker Compose
-  - apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+  - apt-get update
+  - |
+    apt-get install -y \
+      ca-certificates \
+      unattended-upgrades \
+      curl \
+      gnupg \
+      ufw \
+      unzip \
+      yq \
+      docker-ce \
+      docker-ce-cli \
+      containerd.io \
+      docker-buildx-plugin \
+      docker-compose-plugin
+
+  # rclone
+  - curl https://rclone.org/install.sh | sudo bash
+
+  # AWS CLI
+  - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+  - unzip awscliv2.zip
+  - ./aws/install
+  - rm -f awscliv2.zip
 
   # Security Updates
   # The Hetzner default Ubuntu Images already have `unattended-upgrades` enabled.
