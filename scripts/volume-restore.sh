@@ -33,7 +33,7 @@ backup_folder_restore="${MOUNT_FOLDER}/restore"
 rm -rf "${backup_folder_restore}"
 mkdir -p "${backup_folder_restore}"
 cd "${backup_folder_restore}"
-aws s3 cp "s3://${BUCKET_NAME}/${BACKUP_FILE_NAME}" "${BACKUP_FILE_NAME}"
+aws s3 cp "s3://${BACKUP_S3_BUCKET_NAME}/${BACKUP_FILE_NAME}" "${BACKUP_FILE_NAME}"
 tar -xf "${BACKUP_FILE_NAME}"
 rm -rf "${BACKUP_FILE_NAME}"
 
