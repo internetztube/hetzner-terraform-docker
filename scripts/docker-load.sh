@@ -11,11 +11,9 @@ for tar_file in /root/container-artifacts/*.tar; do
   fi
 done
 
-# Each container from docker-compose.yml gets their own persistent folder.
-services=$(yq -r '.services | keys[]' /root/docker-compose.yml)
-for service in ${services}; do
-  mkdir -p "/root/volume/${service}"
-done
+# Create volume folders
+cd /root
+yq -r ".services.[].volumes[] | split(\":\")[0]" docker-compose.yml | tr '\n' '\0' | xargs -0 mkdir -p
 
 # Pull latest container images.
 docker compose pull --ignore-pull-failures
