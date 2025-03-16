@@ -3,7 +3,6 @@ resource "hcloud_server" "default" {
   server_type  = var.server_type
   image        = "ubuntu-24.04"
   location     = var.location
-  user_data    = file("${path.module}/cloud-init.yml")
   firewall_ids = concat(var.firewall_ids, [hcloud_firewall.ssh.id])
   keep_disk = true
 
@@ -14,29 +13,10 @@ resource "hcloud_server" "default" {
   }
 
   labels = {
-    "tf_create_final_snapshot" = var.create_final_snapshot
+    tf_create_final_snapshot = var.create_final_snapshot
   }
 
   ssh_keys = [var.ssh_key_id]
-
-  # Wait until `cloud-init` is finished.
-  provisioner "remote-exec" {
-    inline = [
-      <<EOF
-        tail -f /var/log/cloud-init-output.log & TAIL_PID=$!
-        cloud-init status --wait > /dev/null
-        kill $TAIL_PID
-      EOF
-    ]
-
-    connection {
-      type        = "ssh"
-      user        = "root"
-      private_key = var.ssh_private_key
-      host        = hcloud_server.default.ipv4_address
-      timeout     = "5m"
-    }
-  }
 
   # Final Snapshot
   provisioner "local-exec" {
@@ -50,4 +30,137 @@ resource "hcloud_server" "default" {
     }
     command = "sh ${path.module}/scripts/server-final-snapshot.sh"
   }
+}
+
+# We're using remote scripts in favor of cloud-init.yml, since with every cloud-init.yml the server gets recreated.
+# With remote scripts, we're more flexible.
+resource "null_resource" "host_dependency_basic" {
+  triggers = {
+    last_update = "2025-03-15"
+  }
+
+  depends_on = [
+    hcloud_server.default
+  ]
+
+  provisioner "remote-exec" {
+    inline = [
+      <<EOF
+        apt-get update
+        apt-get install -y ca-certificates unattended-upgrades curl gnupg unzip yq
+      EOF
+    ]
+
+    connection {
+      type        = "ssh"
+      user        = "root"
+      private_key = var.ssh_private_key
+      host        = hcloud_server.default.ipv4_address
+      timeout     = "5m"
+    }
+  }
+}
+
+resource "null_resource" "host_dependency_aws_cli" {
+  triggers = {
+    last_update = "2025-03-15"
+  }
+
+  depends_on = [
+    null_resource.host_dependency_basic
+  ]
+
+  provisioner "remote-exec" {
+    inline = [
+      <<EOF
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        unzip awscliv2.zip
+        ./aws/install
+        rm -f awscliv2.zip
+      EOF
+    ]
+
+    connection {
+      type        = "ssh"
+      user        = "root"
+      private_key = var.ssh_private_key
+      host        = hcloud_server.default.ipv4_address
+      timeout     = "5m"
+    }
+  }
+}
+
+resource "null_resource" "host_dependency_rclone" {
+  triggers = {
+    last_update = "2025-03-15"
+  }
+
+  depends_on = [
+    null_resource.host_dependency_basic
+  ]
+
+  provisioner "remote-exec" {
+    inline = [
+      <<EOF
+        curl https://rclone.org/install.sh | sudo bash
+      EOF
+    ]
+
+    connection {
+      type        = "ssh"
+      user        = "root"
+      private_key = var.ssh_private_key
+      host        = hcloud_server.default.ipv4_address
+      timeout     = "5m"
+    }
+  }
+}
+
+resource "null_resource" "host_dependency_docker" {
+  triggers = {
+    last_update = "2025-03-15"
+  }
+
+  depends_on = [
+    null_resource.host_dependency_basic
+  ]
+
+  provisioner "remote-exec" {
+    inline = [
+      <<EOF
+        # Add Docker's official GPG key
+        install -m 0755 -d /etc/apt/keyrings
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+        chmod a+r /etc/apt/keyrings/docker.gpg
+
+        # Set up Docker repository
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+        # Install Docker Engine, CLI, Containerd, Docker Compose
+        apt-get update
+        apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+      EOF
+    ]
+
+    connection {
+      type        = "ssh"
+      user        = "root"
+      private_key = var.ssh_private_key
+      host        = hcloud_server.default.ipv4_address
+      timeout     = "5m"
+    }
+  }
+}
+
+resource "null_resource" "server_ready" {
+  triggers = {
+    always = timestamp()
+  }
+
+  depends_on = [
+    null_resource.host_dependency_basic,
+    null_resource.host_dependency_aws_cli,
+    null_resource.host_dependency_docker,
+    null_resource.host_dependency_rclone
+  ]
 }

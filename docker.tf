@@ -1,6 +1,6 @@
-resource "null_resource" "docker-build" {
+resource "null_resource" "docker_build" {
   triggers = {
-    always_run = "${timestamp()}"
+    always_run = timestamp()
   }
 
   provisioner "local-exec" {
@@ -20,14 +20,14 @@ resource "local_file" "env_file" {
   ])
 }
 
-resource "null_resource" "docker-upload" {
+resource "null_resource" "docker_upload" {
   triggers = {
-    always_run = "${timestamp()}"
+    always_run = timestamp()
   }
 
   depends_on = [
-    null_resource.docker-build,
-    hcloud_server.default,
+    null_resource.server_ready,
+    null_resource.docker_build,
     hcloud_volume_attachment.default
   ]
 
@@ -39,44 +39,49 @@ resource "null_resource" "docker-upload" {
     timeout     = "5m"
   }
 
+  # Upload docker-compose.yaml file.
   provisioner "file" {
     source      = var.docker_compose_file_path
     destination = "/root/docker-compose.yml"
   }
 
+  # Upload docker-load.sh file.
   provisioner "file" {
     source      = "${path.module}/scripts/docker-load.sh"
     destination = "/root/docker-load.sh"
   }
 
+  # Upload .env file.
   provisioner "file" {
     source      = "${path.module}/.env"
     destination = "/root/.env"
   }
 
+  # Upload docker-compose.service file.
   provisioner "file" {
     source      = "${path.module}/docker-compose.service"
     destination = "/etc/systemd/system/docker-compose.service"
   }
 
+  # Ensure container-artifacts folder exists.
   provisioner "remote-exec" {
     inline = [
       "mkdir -p /root/container-artifacts"
     ]
   }
 
-  # Upload Docker Containers
+  # Upload all container-artifacts.
   provisioner "file" {
     source      = "${local.container_artifacts_folder_path}/"
     destination = "/root/container-artifacts"
   }
 
+  # System: Reload docker service.
   provisioner "remote-exec" {
     inline = [
       "chmod 644 /etc/systemd/system/docker-compose.service",
       "systemctl daemon-reload",
-      "systemctl enable docker-compose",
-      "mkdir -p /root/container-artifacts"
+      "systemctl enable docker-compose"
     ]
   }
 

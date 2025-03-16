@@ -12,7 +12,7 @@ resource "null_resource" "floating_ip_attachment" {
   ]
 
   triggers = {
-    always_run = "${timestamp()}"
+    always_run = timestamp()
   }
 
   connection {
@@ -23,11 +23,13 @@ resource "null_resource" "floating_ip_attachment" {
     timeout     = "5m"
   }
 
+  # Upload floating-ip-attachment.sh file.
   provisioner "file" {
     source      = "${path.module}/scripts/floating-ip-attachment.sh"
     destination = "/root/floating-ip-attachment.sh"
   }
 
+  # Attach floating ip.
   provisioner "remote-exec" {
     inline = [
       "IP_ADDRESS=\"${var.floating_ip.ip_address}\" IP_CIDR=\"${var.floating_ip.type == "ipv4" ? "32": "64"}\" sh /root/floating-ip-attachment.sh"
