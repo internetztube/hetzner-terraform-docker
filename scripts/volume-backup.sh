@@ -22,9 +22,8 @@ RCLONE_CONFIG_FILE_PATH="/root/rclone-config"
 BACKUP_FILENAME="${BACKUP_PREFIX:-"backup"}-$(date +"%Y-%m-%d_%H-%M-%S").tar.gz"
 
 if ! aws s3 ls "s3://${BACKUP_S3_BUCKET_NAME}" > /dev/null 2>&1; then
-  echo "Bucket '${BACKUP_S3_BUCKET_NAME}' does not exist. Proceeding to create it."
-  aws s3api create-bucket --bucket "${BACKUP_S3_BUCKET_NAME}" --acl "private"
-  aws s3api wait bucket-exists --bucket "${BACKUP_S3_BUCKET_NAME}"
+  echo "Bucket does not exit! '${BACKUP_S3_BUCKET_NAME}'"
+  exit 1
 else
   echo "Bucket '${BACKUP_S3_BUCKET_NAME}' already exists and is accessible."
 fi
