@@ -96,7 +96,7 @@ resource "null_resource" "host_dependency_rclone" {
   }
 
   depends_on = [
-    null_resource.host_dependency_basic
+    null_resource.host_dependency_aws_cli
   ]
 
   provisioner "remote-exec" {
@@ -122,7 +122,7 @@ resource "null_resource" "host_dependency_docker" {
   }
 
   depends_on = [
-    null_resource.host_dependency_basic
+    null_resource.host_dependency_rclone
   ]
 
   provisioner "remote-exec" {

@@ -7,9 +7,9 @@ set -eu
 # AWS_REGION=
 # AWS_ENDPOINT_URL="https://${AWS_REGION}.your-objectstorage.com"
 # BACKUP_S3_BUCKET_NAME=
-# BACKUP_TERRAFORM_MODULE_PATH=
-# BACKUP_KEEP_COUNT=5
 # BACKUP_SSH_PRIVATE_KEY=
+# BACKUP_KEEP_COUNT=5
+# BACKUP_TERRAFORM_MODULE_PATH=
 
 SERVER_IP=$(
   terraform show -json \
@@ -43,12 +43,12 @@ chmod 700 ~/.ssh
 chmod 600 ~/.ssh/known_hosts
 
 ssh -i id_rsa "root@${SERVER_IP}" bash -s <<EOF
-  export AWS_REGION="${AWS_REGION}"
   export AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}"
   export AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}"
+  export AWS_REGION="${AWS_REGION}"
   export AWS_ENDPOINT_URL="${AWS_ENDPOINT_URL}"
   export BACKUP_S3_BUCKET_NAME="${BACKUP_S3_BUCKET_NAME}"
-  export BACKUP_PREFIX="${BACKUP_PREFIX}"
   export BACKUP_KEEP_COUNT="${BACKUP_KEEP_COUNT}"
+  export BACKUP_PREFIX="${BACKUP_PREFIX}"
   sh /root/volume-backup.sh
 EOF
