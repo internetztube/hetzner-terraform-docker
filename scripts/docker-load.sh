@@ -13,7 +13,19 @@ done
 
 # Create volume folders
 cd /root
-yq -r ".services.[].volumes[] | split(\":\")[0]" docker-compose.yml | tr '\n' '\0' | xargs -0 mkdir -p
+yq -r "
+  .services
+  | to_entries[]
+  | select(.value.user)
+  | .value as \$svc
+  | \$svc.user    as \$ug
+  | (\$svc.volumes[]? | split(\":\")[0]) + \" \" + \$ug
+" docker-compose.yml \
+| while read -r host ug; do
+  mkdir -p "$host"
+  chown -R "$ug" "$host"
+  chmod -R 775 "$host"
+done
 
 # Pull latest container images.
 docker compose pull --ignore-pull-failures
