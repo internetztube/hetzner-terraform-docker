@@ -29,7 +29,8 @@ else
 fi
 
 cd "${MOUNT_FOLDER}" || exit 1
-tar --exclude=z -czvf "${BACKUP_FILENAME}" $(ls -A)
+# Ignore files changed on disk error. https://stackoverflow.com/a/31114992
+tar --exclude=z -czvf "${BACKUP_FILENAME}" $(ls -A) || [[ $? -eq 1 ]]
 
 # Got the following error when using `aws s3 cp`. Therefore, using rclone here.
 # fatal error: argument of type 'NoneType' is not iterable

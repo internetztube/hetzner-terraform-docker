@@ -32,7 +32,7 @@ resource "hcloud_server" "default" {
   }
 }
 
-# We're using remote scripts in favor of cloud-init.yml, since with every cloud-init.yml the server gets recreated.
+# We're using remote scripts in favor of cloud-init.yml, since with every cloud-init.yml change the server gets recreated.
 # With remote scripts, we're more flexible.
 resource "null_resource" "host_dependency_basic" {
   triggers = {
