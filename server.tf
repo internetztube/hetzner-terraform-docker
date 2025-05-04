@@ -90,39 +90,13 @@ resource "null_resource" "host_dependency_aws_cli" {
   }
 }
 
-resource "null_resource" "host_dependency_rclone" {
-  triggers = {
-    last_update = "2025-03-15"
-  }
-
-  depends_on = [
-    null_resource.host_dependency_aws_cli
-  ]
-
-  provisioner "remote-exec" {
-    inline = [
-      <<EOF
-        curl https://rclone.org/install.sh | sudo bash
-      EOF
-    ]
-
-    connection {
-      type        = "ssh"
-      user        = "root"
-      private_key = var.ssh_private_key
-      host        = hcloud_server.default.ipv4_address
-      timeout     = "5m"
-    }
-  }
-}
-
 resource "null_resource" "host_dependency_docker" {
   triggers = {
     last_update = "2025-03-15"
   }
 
   depends_on = [
-    null_resource.host_dependency_rclone
+    null_resource.host_dependency_aws_cli
   ]
 
   provisioner "remote-exec" {
@@ -160,7 +134,6 @@ resource "null_resource" "server_ready" {
   depends_on = [
     null_resource.host_dependency_basic,
     null_resource.host_dependency_aws_cli,
-    null_resource.host_dependency_docker,
-    null_resource.host_dependency_rclone
+    null_resource.host_dependency_docker
   ]
 }
