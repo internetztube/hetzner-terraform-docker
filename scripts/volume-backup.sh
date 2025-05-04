@@ -11,7 +11,6 @@ set -eu
 # BACKUP_S3_BUCKET_NAME=
 # BACKUP_PREFIX=backup
 # BACKUP_KEEP_COUNT=5
-
 # BACKUP_CLEANUP=true
 
 MOUNT_FOLDER="/root/volume"
