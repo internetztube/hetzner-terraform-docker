@@ -36,7 +36,7 @@ resource "hcloud_server" "default" {
 # With remote scripts, we're more flexible.
 resource "null_resource" "host_dependency_basic" {
   triggers = {
-    last_update = "2025-03-15"
+    last_update = "2025-05-09"
   }
 
   depends_on = [
@@ -47,7 +47,7 @@ resource "null_resource" "host_dependency_basic" {
     inline = [
       <<EOF
         apt-get update
-        apt-get install -y ca-certificates unattended-upgrades curl gnupg unzip yq
+        apt-get install -y ca-certificates unattended-upgrades curl gnupg unzip yq htop
       EOF
     ]
 
