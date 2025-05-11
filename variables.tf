@@ -36,7 +36,7 @@ variable "ssh_private_key" {
 }
 
 variable "keep_disk" {
-  type = bool
+  type    = bool
   default = true
 }
 

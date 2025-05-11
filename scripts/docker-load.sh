@@ -28,7 +28,7 @@ yq -r "
 done
 
 # Pull latest container images.
-docker compose pull --ignore-pull-failures
+docker compose pull --ignore-pull-failures || true
 
 # Restart!
 systemctl restart docker-compose
