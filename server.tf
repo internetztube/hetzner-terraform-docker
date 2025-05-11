@@ -92,7 +92,7 @@ resource "null_resource" "host_dependency_aws_cli" {
 
 resource "null_resource" "host_dependency_docker" {
   triggers = {
-    last_update = "2025-03-15"
+    last_update = "2025-05-11"
   }
 
   depends_on = [
@@ -102,6 +102,16 @@ resource "null_resource" "host_dependency_docker" {
   provisioner "remote-exec" {
     inline = [
       <<EOF
+        # Clean install
+        apt-get remove -y docker-ce                || true
+        apt-get remove -y docker-ce-cli            || true
+        apt-get remove -y containerd.io            || true
+        apt-get remove -y docker-buildx-plugin     || true
+        apt-get remove -y docker-compose-plugin    || true
+
+        # Allow internet access
+        echo "net.ipv4.ip_forward=1" >> /etc/sysctl.d/enable-ip-forward.conf
+
         # Add Docker's official GPG key
         install -m 0755 -d /etc/apt/keyrings
         curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
