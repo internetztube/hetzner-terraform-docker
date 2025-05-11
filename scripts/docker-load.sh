@@ -29,7 +29,7 @@ done
 
 
 # Pull latest container images.
-docker compose pull --ignore-pull-failures || true
+docker compose pull --ignore-pull-failures
 
 # Restart!
 systemctl restart docker-compose
