@@ -4,7 +4,7 @@ resource "hcloud_server" "default" {
   image        = "ubuntu-24.04"
   location     = var.location
   firewall_ids = concat(var.firewall_ids, [hcloud_firewall.ssh.id])
-  keep_disk    = true
+  keep_disk    = var.keep_disk
 
   # ipv4 needs to be enabled in order to make ipv4 floating ip work.
   public_net {

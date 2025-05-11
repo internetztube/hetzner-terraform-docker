@@ -35,6 +35,11 @@ variable "ssh_private_key" {
   type = string
 }
 
+variable "keep_disk" {
+  type = bool
+  default = true
+}
+
 variable "containers_folder" {
   type = string
 }
