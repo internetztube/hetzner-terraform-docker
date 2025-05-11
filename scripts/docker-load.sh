@@ -27,6 +27,9 @@ yq -r "
   chmod -R 775 "$host"
 done
 
+# Delete legacy containers
+docker compose rm -f
+
 # Pull latest container images.
 docker compose pull --ignore-pull-failures || true
 
