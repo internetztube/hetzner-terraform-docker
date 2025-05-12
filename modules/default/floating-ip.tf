@@ -32,7 +32,7 @@ resource "null_resource" "floating_ip_attachment" {
   # Attach floating ip.
   provisioner "remote-exec" {
     inline = [
-      "IP_ADDRESS=\"${var.floating_ip.ip_address}\" IP_CIDR=\"${var.floating_ip.type == "ipv4" ? "32": "64"}\" sh /root/floating-ip-attachment.sh"
+      "IP_ADDRESS=\"${var.floating_ip.ip_address}\" IP_CIDR=\"${var.floating_ip.type == "ipv4" ? "32" : "64"}\" sh /root/floating-ip-attachment.sh"
     ]
   }
 }

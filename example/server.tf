@@ -1,5 +1,5 @@
-module "worker1" {
-  source                   = "github.com/internetztube/hetzner-terraform-docker"
+module "server" {
+  source                   = "github.com/internetztube/hetzner-terraform-docker/modules/default"
   name                     = "worker1"
   server_type              = "cx22"
   location                 = var.location

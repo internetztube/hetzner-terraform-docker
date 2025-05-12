@@ -6,7 +6,7 @@ resource "null_resource" "docker_build" {
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
     environment = {
-      CONTAINERS_FOLDER_PATH = var.containers_folder
+      CONTAINERS_FOLDER_PATH           = var.containers_folder
       CONTAINERS_ARTIFACTS_FOLDER_PATH = local.container_artifacts_folder_path
     }
     command = "sh ${path.module}/scripts/docker-build.sh"

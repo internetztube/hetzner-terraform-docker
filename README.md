@@ -10,12 +10,16 @@
 * Local Docker Registry
 * Custom Docker Build Commands
 
+## Not included
+* Support for ssl/tls
+* traefik
+
 ## Example
 [Full Example](./example)
 
 ```terraform
 module "main" {
-  source                   = "github.com/internetztube/hetzner-terraform-docker"
+  source                   = "github.com/internetztube/hetzner-terraform-docker/modules/default"
   name                     = "main"
   server_type              = "cx22"
   location                 = "nbg1"
