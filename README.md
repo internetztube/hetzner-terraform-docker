@@ -1,21 +1,19 @@
 # Hetzner Terraform Docker
 
 ## Features
-* Volume Backup & Restore
+* Volume Attachment
 * Server Final Snapshot
 * Floating IP
 * Volumes
 * Environment Variables
 * Custom `docker build` commands.
-* Local Docker Registry
+* Local Docker Registry via `docker save` and `docker load`
 * Custom Docker Build Commands
 
 ## Not included
 * Support for ssl/tls
 * traefik
-
-## Example
-[Full Example](./example)
+* Volume Backups
 
 ```terraform
 module "main" {
@@ -26,6 +24,7 @@ module "main" {
   floating_ip              = hcloud_floating_ip.main
   volume                   = hcloud_volume.main
   firewall_ids             = [hcloud_firewall.http.id]
+  backups                  = true
   create_final_snapshot    = true
   containers_folder        = abspath("./containers")
   docker_compose_file_path = abspath("./docker-compose.yml")

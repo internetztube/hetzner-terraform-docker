@@ -29,16 +29,6 @@ resource "null_resource" "volume_attachment" {
     destination = "/root/volume-attachment.sh"
   }
 
-  provisioner "file" {
-    source      = "${path.module}/scripts/volume-backup.sh"
-    destination = "/root/volume-backup.sh"
-  }
-
-  provisioner "file" {
-    source      = "${path.module}/scripts/volume-restore.sh"
-    destination = "/root/volume-restore.sh"
-  }
-
   provisioner "remote-exec" {
     inline = [
       "VOLUME_ID=\"${var.volume.id}\" sh /root/volume-attachment.sh"

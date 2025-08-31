@@ -27,7 +27,6 @@ yq -r "
   chmod -R 775 "$host"
 done
 
-
 # Pull latest container images.
 docker compose pull --ignore-pull-failures
 
