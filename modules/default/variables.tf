@@ -44,6 +44,11 @@ variable "containers_folder" {
   type = string
 }
 
+variable "backups" {
+  type    = bool
+  default = true
+}
+
 variable "docker_compose_file_path" {
   type = string
 }

@@ -30,7 +30,7 @@ cd "${MOUNT_FOLDER}" || exit 1
 # Ignore files changed on disk error. https://stackoverflow.com/a/31114992
 tar --exclude=z -czvf "${BACKUP_FILENAME}" $(ls -A) || [[ $? -eq 1 ]]
 
-aws s3 cp "${MOUNT_FOLDER}/${BACKUP_FILENAME}" s3://${BACKUP_S3_BUCKET_NAME}
+aws s3 cp "${MOUNT_FOLDER}/${BACKUP_FILENAME}" "s3://${BACKUP_S3_BUCKET_NAME}"
 
 rm -f "${MOUNT_FOLDER}/${BACKUP_FILENAME}"
 
